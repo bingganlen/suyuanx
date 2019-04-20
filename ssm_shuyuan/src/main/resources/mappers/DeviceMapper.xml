@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.megain.junhao.dao.DeviceMapper">
+  <resultMap id="BaseResultMap" type="com.megain.junhao.pojo.Device">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dev_id" jdbcType="BIGINT" property="devId" />
+    <result column="video" jdbcType="INTEGER" property="video" />
+    <result column="d_image" jdbcType="VARCHAR" property="dImage" />
+    <result column="d_ip" jdbcType="VARCHAR" property="dIp" />
+    <result column="device_ip" jdbcType="VARCHAR" property="deviceIp" />
+    <result column="d_status" jdbcType="INTEGER" property="dStatus" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="dev_type" jdbcType="VARCHAR" property="devType" />
+    <result column="csq" jdbcType="INTEGER" property="csq" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.megain.junhao.pojo.Device">
+    <result column="d_detail" jdbcType="LONGVARCHAR" property="dDetail" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, dev_id, video, d_image, d_ip, device_ip, d_status, nickname, dev_type, csq, create_time, 
+    update_time
+  </sql>
+  <sql id="Blob_Column_List">
+    d_detail
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from device
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from device
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.megain.junhao.pojo.Device">
+    insert into device (id, dev_id, video, 
+      d_image, d_ip, device_ip, 
+      d_status, nickname, dev_type, 
+      csq, create_time, update_time, 
+      d_detail)
+    values (#{id,jdbcType=INTEGER}, #{devId,jdbcType=BIGINT}, #{video,jdbcType=INTEGER}, 
+      #{dImage,jdbcType=VARCHAR}, #{dIp,jdbcType=VARCHAR}, #{deviceIp,jdbcType=VARCHAR}, 
+      #{dStatus,jdbcType=INTEGER}, #{nickname,jdbcType=VARCHAR}, #{devType,jdbcType=VARCHAR}, 
+      #{csq,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{dDetail,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.megain.junhao.pojo.Device">
+    insert into device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="devId != null">
+        dev_id,
+      </if>
+      <if test="video != null">
+        video,
+      </if>
+      <if test="dImage != null">
+        d_image,
+      </if>
+      <if test="dIp != null">
+        d_ip,
+      </if>
+      <if test="deviceIp != null">
+        device_ip,
+      </if>
+      <if test="dStatus != null">
+        d_status,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="devType != null">
+        dev_type,
+      </if>
+      <if test="csq != null">
+        csq,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="dDetail != null">
+        d_detail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="devId != null">
+        #{devId,jdbcType=BIGINT},
+      </if>
+      <if test="video != null">
+        #{video,jdbcType=INTEGER},
+      </if>
+      <if test="dImage != null">
+        #{dImage,jdbcType=VARCHAR},
+      </if>
+      <if test="dIp != null">
+        #{dIp,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceIp != null">
+        #{deviceIp,jdbcType=VARCHAR},
+      </if>
+      <if test="dStatus != null">
+        #{dStatus,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="devType != null">
+        #{devType,jdbcType=VARCHAR},
+      </if>
+      <if test="csq != null">
+        #{csq,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dDetail != null">
+        #{dDetail,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.megain.junhao.pojo.Device">
+    update device
+    <set>
+      <if test="devId != null">
+        dev_id = #{devId,jdbcType=BIGINT},
+      </if>
+      <if test="video != null">
+        video = #{video,jdbcType=INTEGER},
+      </if>
+      <if test="dImage != null">
+        d_image = #{dImage,jdbcType=VARCHAR},
+      </if>
+      <if test="dIp != null">
+        d_ip = #{dIp,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceIp != null">
+        device_ip = #{deviceIp,jdbcType=VARCHAR},
+      </if>
+      <if test="dStatus != null">
+        d_status = #{dStatus,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="devType != null">
+        dev_type = #{devType,jdbcType=VARCHAR},
+      </if>
+      <if test="csq != null">
+        csq = #{csq,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dDetail != null">
+        d_detail = #{dDetail,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.megain.junhao.pojo.Device">
+    update device
+    set dev_id = #{devId,jdbcType=BIGINT},
+      video = #{video,jdbcType=INTEGER},
+      d_image = #{dImage,jdbcType=VARCHAR},
+      d_ip = #{dIp,jdbcType=VARCHAR},
+      device_ip = #{deviceIp,jdbcType=VARCHAR},
+      d_status = #{dStatus,jdbcType=INTEGER},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      dev_type = #{devType,jdbcType=VARCHAR},
+      csq = #{csq,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      d_detail = #{dDetail,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.megain.junhao.pojo.Device">
+    update device
+    set dev_id = #{devId,jdbcType=BIGINT},
+      video = #{video,jdbcType=INTEGER},
+      d_image = #{dImage,jdbcType=VARCHAR},
+      d_ip = #{dIp,jdbcType=VARCHAR},
+      device_ip = #{deviceIp,jdbcType=VARCHAR},
+      d_status = #{dStatus,jdbcType=INTEGER},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      dev_type = #{devType,jdbcType=VARCHAR},
+      csq = #{csq,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cross-domain-policy> 
+	<allow-access-from domain="*"/>
+	<!--<allow-access-from domain="*1p5e803947.imwork.net:18634/hls"/>
+	<allow-access-from domain="localhost:8080"/>-->
+</cross-domain-policy>

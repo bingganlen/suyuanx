@@ -1,0 +1,57 @@
+body{padding: 0;margin: 0; position: relative; font-size: 18px;}
+#atext{
+	font-family: 华文中宋;
+   position: absolute;
+   top: 100px;
+   left: 100px;
+}
+.content{
+	width: 600px;
+	height: 500px;
+	/*background: #4ab7cb;*/
+	margin: 100px auto;
+	position: relative;
+}
+.formla{
+	margin-left: 210px;
+	margin-bottom: 15px;
+}
+.inputsize{
+	width: 135px;
+	height: 20px;
+}
+.inputsize1{
+    width: 60px;
+	height: 23px;
+}
+.bool{
+   width: 45px;
+   height: 25px;
+}
+.locate{
+	width: 45px;
+   height: 25px;
+   margin-left: 30px; 
+}
+.btn{margin-top: 20px; margin-left: 120px; 
+	width: 150px;height: 40px; 
+	font-family: 华文楷体;font-size:27px; 
+	font-weight: bold;
+	cursor: pointer; 
+	background: white;
+    border-radius: 5px;
+    border: 1px solid #333333;
+}
+.btn:hover{border: 2px solid #4ab7cb; }
+.btnsubmit{
+    
+}
+.btnquite{
+    
+}
+
+.box{
+	width: 100px;
+	height: 20px;
+	border-color:rgba(255,55,155,0.7) ;
+}

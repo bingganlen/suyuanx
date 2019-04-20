@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.megain.junhao.dao.Device_userMapper">
+  <resultMap id="BaseResultMap" type="com.megain.junhao.pojo.Device_user">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+  </resultMap>
+
+  <select id="selectDeviceIDByUserId" parameterType="int" resultMap="BaseResultMap">
+    select
+    device_id
+    from device_user
+    where id = #{id}
+  </select>
+  <select id="selectUserIdByDeviceID" parameterType="int" resultMap="BaseResultMap">
+    select
+    id
+    from device_user
+    where device_id = #{deviceId}
+  </select>
+
+
+  <insert id="insert" parameterType="com.megain.junhao.pojo.Device_user">
+    insert into device_user (id, device_id)
+    values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.megain.junhao.pojo.Device_user">
+    insert into device_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="deviceId != null">
+        device_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

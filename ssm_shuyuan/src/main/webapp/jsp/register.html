@@ -1,0 +1,222 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .p{
+            color:red;
+            margin-left:20px;
+            display:inline-block;
+        }
+        .c{
+            color:red;
+            margin-left:4px;
+            display:inline-block;
+        }
+        .l{
+            font-size:18px;
+        }
+        .d{
+            height:35px;
+            width:300px;
+            display:inline;
+        }
+        .i{
+            height:30px;
+            width:100px;
+        }
+        .code
+        {
+            background-image: url(../images/huise.png);
+            font-family:Arial;
+            font-style:italic;
+            font-size:16px;
+            color:Red;
+            border:0;
+            padding:2px 3px;
+            letter-spacing:3px;
+            font-weight:bolder;
+        }
+
+        .kuang{height: 30px;width: 200px;}
+        .mycode{
+            display: inline-block;
+
+            width: 80px;
+            height: 40px;
+            vertical-align: middle;
+            border:0;
+            cursor:pointer
+        }
+        .a{
+            margin-left:50px;height:30px;width:100px;background-color:white;display:inline-block;border:1px solid #000;border-radius:6px;text-decoration:none;color: black;text-align: center;float: left; line-height: 30px;
+        }
+        .que{
+            margin-left:50px;height:30px; width:100px;background-color:white;display:inline-block; border:1px solid #000;border-radius:6px;float: left;
+        }
+        .a:hover{border: 2px solid #4ab7cb;background: #cac9c9;}
+        .que:hover{border: 2px solid #4ab7cb; background: #cac9c9;}
+    </style>
+</head>
+<body>
+<div style="height:80px;"></div>
+<form  id="formlogin">
+    <div style="width:500px;margin:0 auto; position: relative;">
+        <div style="font-size:28px;">注册新用户</div>
+        <br/>
+        <span class="p">*</span>
+        <label for="username" class="l">用户名:</label>
+        <div style="height:35px;width:300px;position:relative;display:inline;">
+            <input id="username" name="username" type="text" style="height:30px;width:200px;padding-right:50px;" onBlur="checkUserName()">
+
+        </div>
+        <br/><br/>
+        <span class="p">*</span>
+        <label for="phonenumber" class="l">手机号:</label>
+        <div  class="d">
+            <input id="phonenumber" name="phone" class="kuang" type="text" onblur="checkphone()">
+        </div>
+        <br/><br/>
+        <span class="c">*</span>
+        <label for="login_password" class="l">登录密码:</label>
+        <div  class="d">
+            <input id="login_password" name="password" class="kuang" type="text" >
+        </div>
+        <br/><br/>
+        <span class="c">*</span>
+        <label for="confirm_password" class="l">确认密码:</label>
+        <div  class="d">
+            <input id="confirm_password" name="double" class="kuang" type="text" onBlur="checkPassword()">
+        </div>
+        <br/><br/>
+        <span class="p">*</span>
+        <label for="ver_code" class="l">验证码:</label>
+        <div  class="d">
+            <input id="validCode" type="text" class="i">
+            <!-- <span onClick="createCode()" readonly="readonly" id="checkCode" class="mycode"></span> -->
+            <input type="text" onClick="createCode()" readonly="readonly" id="checkCode" class="mycode" style="width: 80px;" />
+        </div>
+        <br/><br/>
+        <!-- <input type="checkbox" name="agree" style="margin-left:100px;display:inline-block;" value="1"/>
+        <span style="font-size:10px;">我已阅读并同意《用户注册协议》</span>
+        <br/><br/> -->
+        <input type="button" id="submit" name="submit" class="que l" value="确认" style="" onclick="register()"/>
+        <a class="a l" href="../index.jsp">取消</a>
+    </div>
+</form>
+<!--<script src="js/js.KinerCode.js"></script>-->
+<script>
+    window.onload = createCode;
+
+    var code ; //在全局 定义验证码
+    function createCode()
+    {
+        code = "";
+        var codeLength = 4;//验证码的长度
+        var checkCode = document.getElementById("checkCode");
+        var selectChar = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');//所有候选组成验证码的字符，当然也可以用中文的
+        for(var i=0;i<codeLength;i++)
+        {
+            var charIndex = Math.floor(Math.random()*36);
+            code +=selectChar[charIndex];
+        }
+        if(checkCode)
+        {
+            checkCode.className="code";
+            checkCode.value = code;
+            checkCode.blur();
+        }
+    }
+    function checkyan ()   {
+        var inputCode = document.getElementById("validCode").value;
+        if(inputCode.length <=0)
+        {
+            alert("请输入验证码！");
+        }
+        else if(inputCode.toUpperCase() != code )
+        {
+            alert("验证码输入错误！");
+            createCode();//刷新验证码
+        }
+        else
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+</script>
+<script type="text/javascript">
+
+    function register(){
+        if (checkUserName()==true && checkPassword()== true && checkyan() && checkphone()==true) {
+            $.ajax({
+                url: "/user/register.do",
+                type: "post",
+//                dataType: "jsonp",
+//                crossDomain: true,
+                data: $('#formlogin').serialize(),
+                success: function (data) {
+                    if (data.status == 0) {
+                        //这一步时将后台获取的data存储到obj中
+                        sessionStorage.obj = JSON.stringify(data);
+                        //登陆成功后跳转到首页
+                        alert("注册成功，请登录");
+                        window.location.href = "../index.jsp";
+                    }
+                }
+            });
+            //return true;
+        }else{
+            return false;
+        }
+
+
+    }
+
+    function checkPassword(){
+        var pass = document.getElementById("login_password").value;
+        var repass = document.getElementById("confirm_password").value;
+
+        if (pass == repass) {//pass.trim() == repass.trim()  trim()去重忽然报错  因为js没有这个内置方法
+            return true;   //判断成功
+        }
+        else{
+
+            alert("两次密码输入不一致");
+            return false;
+
+        }
+
+    }
+
+    function checkUserName(){
+        var name = document.getElementById("username");
+        if (name.value.length == 0) {
+            alert("用户名不为空");
+            return false;
+
+        }else{
+            return true;
+        }
+    }
+
+    function checkphone(){
+        var phone = document.getElementById('phonenumber').value;
+
+        if(!(/^[1][3,4,5,7,8,9][0-9]{9}$/.test(phone))){  //以1为开头 第二位可为3,4,5,7,8,9中的任意一位
+
+            alert("手机号码有误，请重填");
+
+            return false;
+
+        }
+        return true;
+    }
+</script>
+
+
+
+</body>
+</html>

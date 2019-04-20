@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.megain.junhao.dao.Device_config_hisMapper">
+  <resultMap id="BaseResultMap" type="com.megain.junhao.pojo.Device_config_his">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="config_identifier" jdbcType="VARCHAR" property="configIdentifier" />
+    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="data_upload_interval" jdbcType="INTEGER" property="dataUploadInterval" />
+    <result column="data_samp_interval" jdbcType="INTEGER" property="dataSampInterval" />
+    <result column="is_enable_locate" jdbcType="INTEGER" property="isEnableLocate" />
+    <result column="config_time" jdbcType="TIMESTAMP" property="configTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, config_identifier, device_id, data_upload_interval, data_samp_interval, is_enable_locate, 
+    config_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from device_config_his
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from device_config_his
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.megain.junhao.pojo.Device_config_his">
+    insert into device_config_his (id, config_identifier, device_id, 
+      data_upload_interval, data_samp_interval, is_enable_locate, 
+      config_time)
+    values (#{id,jdbcType=INTEGER}, #{configIdentifier,jdbcType=VARCHAR}, #{deviceId,jdbcType=BIGINT}, 
+      #{dataUploadInterval,jdbcType=INTEGER}, #{dataSampInterval,jdbcType=INTEGER}, #{isEnableLocate,jdbcType=INTEGER}, 
+      #{configTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.megain.junhao.pojo.Device_config_his">
+    insert into device_config_his
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="configIdentifier != null">
+        config_identifier,
+      </if>
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="dataUploadInterval != null">
+        data_upload_interval,
+      </if>
+      <if test="dataSampInterval != null">
+        data_samp_interval,
+      </if>
+      <if test="isEnableLocate != null">
+        is_enable_locate,
+      </if>
+      <if test="configTime != null">
+        config_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="configIdentifier != null">
+        #{configIdentifier,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="dataUploadInterval != null">
+        #{dataUploadInterval,jdbcType=INTEGER},
+      </if>
+      <if test="dataSampInterval != null">
+        #{dataSampInterval,jdbcType=INTEGER},
+      </if>
+      <if test="isEnableLocate != null">
+        #{isEnableLocate,jdbcType=INTEGER},
+      </if>
+      <if test="configTime != null">
+        #{configTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.megain.junhao.pojo.Device_config_his">
+    update device_config_his
+    <set>
+      <if test="configIdentifier != null">
+        config_identifier = #{configIdentifier,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null">
+        device_id = #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="dataUploadInterval != null">
+        data_upload_interval = #{dataUploadInterval,jdbcType=INTEGER},
+      </if>
+      <if test="dataSampInterval != null">
+        data_samp_interval = #{dataSampInterval,jdbcType=INTEGER},
+      </if>
+      <if test="isEnableLocate != null">
+        is_enable_locate = #{isEnableLocate,jdbcType=INTEGER},
+      </if>
+      <if test="configTime != null">
+        config_time = #{configTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.megain.junhao.pojo.Device_config_his">
+    update device_config_his
+    set config_identifier = #{configIdentifier,jdbcType=VARCHAR},
+      device_id = #{deviceId,jdbcType=BIGINT},
+      data_upload_interval = #{dataUploadInterval,jdbcType=INTEGER},
+      data_samp_interval = #{dataSampInterval,jdbcType=INTEGER},
+      is_enable_locate = #{isEnableLocate,jdbcType=INTEGER},
+      config_time = #{configTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

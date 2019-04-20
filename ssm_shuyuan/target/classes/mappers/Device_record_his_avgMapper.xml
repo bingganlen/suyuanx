@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.megain.junhao.dao.Device_record_his_avgMapper">
+  <resultMap id="BaseResultMap" type="com.megain.junhao.pojo.Device_record_his_avg">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dev_id" jdbcType="BIGINT" property="devId" />
+    <result column="video" jdbcType="VARCHAR" property="video" />
+    <result column="light" jdbcType="DOUBLE" property="light" />
+    <result column="rain" jdbcType="DOUBLE" property="rain" />
+    <result column="air_temp" jdbcType="DOUBLE" property="airTemp" />
+    <result column="air_humi" jdbcType="DOUBLE" property="airHumi" />
+    <result column="soil_temp" jdbcType="DOUBLE" property="soilTemp" />
+    <result column="soil_humi" jdbcType="DOUBLE" property="soilHumi" />
+    <result column="soil_electric" jdbcType="DOUBLE" property="soilElectric" />
+    <result column="soil_salt" jdbcType="DOUBLE" property="soilSalt" />
+    <result column="air_pressure" jdbcType="DOUBLE" property="airPressure" />
+    <result column="wind_speed" jdbcType="DOUBLE" property="windSpeed" />
+    <result column="wind" jdbcType="VARCHAR" property="wind" />
+    <result column="create_time" jdbcType="DATE" property="createTime" />
+    <result column="update_time" jdbcType="DATE" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, dev_id, video, light, rain, air_temp, air_humi, soil_temp, soil_humi, soil_electric, 
+    soil_salt, air_pressure, wind_speed, wind, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from device_record_his_avg
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!--查询最近一个星期的记录 where week(create_time) = week(now)     DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(create_time);-->
+  <select id="selectByDeviceWeek" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his_avg
+    where dev_id = #{devId}
+    and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(create_time)
+    order by create_time ASC
+  </select>
+
+  <!--查询一个月数据   每一天须为平均值-->
+  <select id="selectByDeviceMonth" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his_avg
+    where dev_id = #{devId}
+    and date_sub(curdate(), INTERVAL 30 DAY) &lt;= date(create_time);
+  </select>
+
+
+  <!--查询本年   每个月须为平均值-->
+  <select id="selectByDeviceYear" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his_avg
+    where dev_id = #{devId}
+    and   YEAR( create_time ) = YEAR( NOW( ) )
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from device_record_his_avg
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.megain.junhao.pojo.Device_record_his_avg">
+    insert into device_record_his_avg (id, dev_id, video, 
+      light, rain, air_temp, 
+      air_humi, soil_temp, soil_humi, 
+      soil_electric, soil_salt, air_pressure, 
+      wind_speed, wind, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{devId,jdbcType=BIGINT}, #{video,jdbcType=VARCHAR}, 
+      #{light,jdbcType=DOUBLE}, #{rain,jdbcType=DOUBLE}, #{airTemp,jdbcType=DOUBLE}, 
+      #{airHumi,jdbcType=DOUBLE}, #{soilTemp,jdbcType=DOUBLE}, #{soilHumi,jdbcType=DOUBLE}, 
+      #{soilElectric,jdbcType=DOUBLE}, #{soilSalt,jdbcType=DOUBLE}, #{airPressure,jdbcType=DOUBLE}, 
+      #{windSpeed,jdbcType=DOUBLE}, #{wind,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, 
+      #{updateTime,jdbcType=DATE})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.megain.junhao.pojo.Device_record_his_avg">
+    update device_record_his_avg
+    <set>
+      <if test="devId != null">
+        dev_id = #{devId,jdbcType=BIGINT},
+      </if>
+      <if test="video != null">
+        video = #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="light != null">
+        light = #{light,jdbcType=DOUBLE},
+      </if>
+      <if test="rain != null">
+        rain = #{rain,jdbcType=DOUBLE},
+      </if>
+      <if test="airTemp != null">
+        air_temp = #{airTemp,jdbcType=DOUBLE},
+      </if>
+      <if test="airHumi != null">
+        air_humi = #{airHumi,jdbcType=DOUBLE},
+      </if>
+      <if test="soilTemp != null">
+        soil_temp = #{soilTemp,jdbcType=DOUBLE},
+      </if>
+      <if test="soilHumi != null">
+        soil_humi = #{soilHumi,jdbcType=DOUBLE},
+      </if>
+      <if test="soilElectric != null">
+        soil_electric = #{soilElectric,jdbcType=DOUBLE},
+      </if>
+      <if test="soilSalt != null">
+        soil_salt = #{soilSalt,jdbcType=DOUBLE},
+      </if>
+      <if test="airPressure != null">
+        air_pressure = #{airPressure,jdbcType=DOUBLE},
+      </if>
+      <if test="windSpeed != null">
+        wind_speed = #{windSpeed,jdbcType=DOUBLE},
+      </if>
+      <if test="wind != null">
+        wind = #{wind,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.megain.junhao.pojo.Device_record_his_avg">
+    update device_record_his_avg
+    set dev_id = #{devId,jdbcType=BIGINT},
+      video = #{video,jdbcType=VARCHAR},
+      light = #{light,jdbcType=DOUBLE},
+      rain = #{rain,jdbcType=DOUBLE},
+      air_temp = #{airTemp,jdbcType=DOUBLE},
+      air_humi = #{airHumi,jdbcType=DOUBLE},
+      soil_temp = #{soilTemp,jdbcType=DOUBLE},
+      soil_humi = #{soilHumi,jdbcType=DOUBLE},
+      soil_electric = #{soilElectric,jdbcType=DOUBLE},
+      soil_salt = #{soilSalt,jdbcType=DOUBLE},
+      air_pressure = #{airPressure,jdbcType=DOUBLE},
+      wind_speed = #{windSpeed,jdbcType=DOUBLE},
+      wind = #{wind,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=DATE},
+      update_time = #{updateTime,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

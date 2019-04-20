@@ -1,0 +1,93 @@
+/* 大div的框框 虚边 */
+.page-settings .setting{
+	background-color:#fff;
+	box-shadow:0 4px 8px 0 rgba(0,0,0,.1);
+	width:960px;height:780px;
+	margin:-40px auto auto;
+	overflow:hidden
+}
+/*顶部标题*/
+.page-settings .top {
+    width: 100%;
+    height: 160px;
+}
+.page-settings .top .top_title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 120px;
+}
+.page-settings .top .top_title p {
+    padding-left: 30px;
+}
+/*小一点的框*/
+.page-settings .setting {
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,.1);
+    width: 960px;
+    height: 780px;
+    margin: -40px auto auto;
+    overflow: hidden;
+}
+/*内容*/
+.page-settings .setting .contentBox {
+    width: 896px;
+    margin: auto;
+    position: relative;
+    padding-top: 28px;
+}
+.page-settings .setting .contentBox .formBox {
+    width: 520px;
+    margin: auto;
+}
+
+/*性别昵称等标题列*/
+.label-name {
+    float: left;
+    width: 70px;
+    text-align: right;
+    height: 40px;
+    line-height: 40px;
+    color: #07111b;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/*按钮*/
+.contentBox .avator-btn-fake {
+    display: block;
+    width: 134px;
+    height: 36px;
+    line-height: 36px;
+    color: #4d555d;
+    background-color: #f3f5f7;
+    vertical-align: middle;
+    margin: 10px 0;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color .2s;
+    -webkit-transition: background-color .2s;
+    -moz-transition: background-color .2s;
+    -o-transition: background-color .2s;
+}
+/*绿按钮*/
+.setting-profile .wlfg-wrap .rlf-btn-green {
+    background-color: #00b33b;
+    border-radius: 2px;
+}
+.setting-profile .wlfg-wrap .profile-btn {
+    display: block;
+    color: #fff;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    width: 96px;
+    height: 40px;
+}
+
+/*input的框*/
+.setting-profile .wlfg-wrap .rlf-group {
+    float: left;
+    width: 410px;
+    margin-left: 8px;
+    color: #60686b;
+}

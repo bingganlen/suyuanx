@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.megain.junhao.dao.Device_record_hisMapper">
+  <resultMap id="BaseResultMap" type="com.megain.junhao.pojo.Device_record_his">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dev_id" jdbcType="BIGINT" property="devId" />
+    <result column="video" jdbcType="INTEGER" property="video" />
+    <result column="light" jdbcType="INTEGER" property="light" />
+    <result column="rain" jdbcType="INTEGER" property="rain" />
+    <result column="air_temp" jdbcType="INTEGER" property="airTemp" />
+    <result column="air_humi" jdbcType="INTEGER" property="airHumi" />
+    <result column="soil_temp" jdbcType="INTEGER" property="soilTemp" />
+    <result column="soil_humi" jdbcType="INTEGER" property="soilHumi" />
+    <result column="soil_electric" jdbcType="INTEGER" property="soilElectric" />
+    <result column="soil_salt" jdbcType="INTEGER" property="soilSalt" />
+    <result column="air_pressure" jdbcType="INTEGER" property="airPressure" />
+    <result column="wind_speed" jdbcType="INTEGER" property="windSpeed" />
+    <result column="wind" jdbcType="INTEGER" property="wind" />
+    <result column="longtitude" jdbcType="INTEGER" property="longtitude" />
+    <result column="latitude" jdbcType="INTEGER" property="latitude" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, dev_id, video, light, rain, air_temp, air_humi, soil_temp, soil_humi, soil_electric, 
+    soil_salt, air_pressure, wind_speed, wind, longtitude, latitude, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from device_record_his
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+<!--  离当前时间最近的一个记录-->
+  <select id="selectByDevice" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his
+    where dev_id = #{devId}
+    ORDER BY ABS(NOW() - create_time) ASC
+    limit 1
+  </select>
+
+
+
+  <!--查询今天-->
+ <!-- <select id="selectByDeviceDay" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his
+    where dev_id = #{devId}
+    and to_days(create_time) = to_days(now())
+    order by create_time ASC
+  </select>-->
+
+
+  <!--查询今天   当前时间为准近24小时-->
+  <select id="selectByDeviceDay" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his
+    where dev_id = #{devId}
+    and create_time &gt;= DATE_SUB(NOW(),INTERVAL 1 DAY)
+    order by create_time ASC
+  </select>
+   <!-- <select id="selectByDayCount" resultType="java.util.Map" parameterType="java.lang.Integer">
+    SELECT
+    DATE_FORMAT(dday,'%d-%k') ddate,
+    count(*)-1  as count
+    FROM
+    (
+      SELECT
+        DATE_FORMAT(create_time,'%d-%k')as dday
+      FROM
+       calendar
+      where  create_time &gt;= DATE_SUB(NOW(),INTERVAL 1 DAY)
+      UNION ALL
+      SELECT
+        DATE_FORMAT(create_time,'%d-%k')
+      FROM
+        device_record_his
+      where create_time &gt;= DATE_SUB(NOW(),INTERVAL 1 DAY)
+      and dev_id = #{devId}
+    )a
+    GROUP BY ddate
+    </select>-->
+
+  <!--查询最近一个星期的记录 where week(create_time) = week(now)     DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(create_time);-->
+  <select id="selectByDeviceWeek" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his
+    where dev_id = #{devId}
+    and DATE_SUB(CURDATE(), INTERVAL 6 DAY) &lt;= date(create_time)
+    order by create_time ASC
+  </select>
+  <!-- 统计这周哪一天有多少个数据 -->
+  <select id="selectByWeekCount" resultType="java.util.Map" parameterType="java.lang.Integer">
+    SELECT
+    DATE_FORMAT(dday,'%m-%d') ddate,
+    count(*)-1  as count
+    FROM
+    (
+      SELECT
+        DATE_FORMAT(create_time,'%y-%m-%d')as dday
+      FROM
+       calendar
+      where  DATE_SUB(CURDATE(), INTERVAL 6 DAY) &lt;= date(create_time)&amp;&amp;date(create_time)&lt;=CURDATE()
+      UNION ALL
+      SELECT
+        DATE_FORMAT(create_time,'%y-%m-%d')
+      FROM
+        device_record_his
+      where  DATE_SUB(CURDATE(), INTERVAL 6 DAY) &lt;= date(create_time)&amp;&amp;date(create_time)&lt;=CURDATE()
+      and dev_id = #{devId}
+    )a
+    GROUP BY ddate
+    order by ddate
+  </select>
+
+  <!--查询一个月30前数据 -->
+    <select id="selectByDeviceMonth" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his
+    where dev_id = #{devId}
+    and  DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= DATE(create_time)
+        order by create_time ASC
+    </select>
+  <!-- 统计这月一天有多少个数据 -->
+  <select id="selectByMonthCount" resultType="java.util.Map" parameterType="java.lang.Integer">
+    SELECT
+    date(dday) ddate,
+    count(*)-1  as count
+    FROM
+    (
+      SELECT
+        DATE_FORMAT(create_time,'%Y-%m-%d')as dday
+      FROM
+       calendar
+      where  DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(create_time)&amp;&amp;date(create_time)&lt;=CURDATE()
+      UNION ALL
+      SELECT
+        DATE_FORMAT(create_time,'%Y-%m-%d')
+      FROM
+        device_record_his
+      where  DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(create_time)&amp;&amp;date(create_time)&lt;=CURDATE()
+      and dev_id = #{devId}
+    )a
+    GROUP BY ddate
+  </select>
+
+    <!--查询本月-->
+ <!-- <select id="selectByDeviceMonth" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his
+    where dev_id = #{devId}
+    and PERIOD_DIFF( date_format( now() , '%Y%m' ) , date_format( create_time, '%Y%m' ) ) =1
+    order by create_time ASC
+  </select>-->
+
+  <!--查询今年   每个月须为平均值-->
+  <select id="selectByDeviceYear" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from device_record_his
+    where dev_id = #{devId}
+    and YEAR( create_time ) = YEAR( NOW( ))
+    order by create_time ASC
+  </select>
+  <!-- 统计这年每个月有多少个数据   bug  一个月有30天的 有31天 有28天   -->
+  <select id="selectByYearCount" resultType="java.util.Map" parameterType="java.lang.Integer">
+    SELECT
+    date(dday,'%Y-%m') ddate,
+    count(*)-31  as count
+    FROM
+    (
+      SELECT
+        DATE_FORMAT(create_time,'%Y-%m-%d')as dday
+      FROM
+       calendar
+      where  YEAR( create_time ) = YEAR( NOW( ))
+      UNION ALL
+      SELECT
+        DATE_FORMAT(create_time,'%Y-%m-%d')
+      FROM
+        device_record_his
+      where  YEAR( create_time ) = YEAR( NOW( ))
+      and dev_id = #{devId}
+    )a
+    GROUP BY ddate
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from device_record_his
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.megain.junhao.pojo.Device_record_his">
+    insert into device_record_his (id, dev_id, video, 
+      light, rain, air_temp, 
+      air_humi, soil_temp, soil_humi, 
+      soil_electric, soil_salt, air_pressure, 
+      wind_speed, wind, longtitude, 
+      latitude, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{devId,jdbcType=BIGINT}, #{video,jdbcType=INTEGER}, 
+      #{light,jdbcType=INTEGER}, #{rain,jdbcType=INTEGER}, #{airTemp,jdbcType=INTEGER}, 
+      #{airHumi,jdbcType=INTEGER}, #{soilTemp,jdbcType=INTEGER}, #{soilHumi,jdbcType=INTEGER}, 
+      #{soilElectric,jdbcType=INTEGER}, #{soilSalt,jdbcType=INTEGER}, #{airPressure,jdbcType=INTEGER}, 
+      #{windSpeed,jdbcType=INTEGER}, #{wind,jdbcType=INTEGER}, #{longtitude,jdbcType=INTEGER}, 
+      #{latitude,jdbcType=INTEGER}, now(), now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.megain.junhao.pojo.Device_record_his">
+    insert into device_record_his
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="devId != null">
+        dev_id,
+      </if>
+      <if test="video != null">
+        video,
+      </if>
+      <if test="light != null">
+        light,
+      </if>
+      <if test="rain != null">
+        rain,
+      </if>
+      <if test="airTemp != null">
+        air_temp,
+      </if>
+      <if test="airHumi != null">
+        air_humi,
+      </if>
+      <if test="soilTemp != null">
+        soil_temp,
+      </if>
+      <if test="soilHumi != null">
+        soil_humi,
+      </if>
+      <if test="soilElectric != null">
+        soil_electric,
+      </if>
+      <if test="soilSalt != null">
+        soil_salt,
+      </if>
+      <if test="airPressure != null">
+        air_pressure,
+      </if>
+      <if test="windSpeed != null">
+        wind_speed,
+      </if>
+      <if test="wind != null">
+        wind,
+      </if>
+      <if test="longtitude != null">
+        longtitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="devId != null">
+        #{devId,jdbcType=BIGINT},
+      </if>
+      <if test="video != null">
+        #{video,jdbcType=INTEGER},
+      </if>
+      <if test="light != null">
+        #{light,jdbcType=INTEGER},
+      </if>
+      <if test="rain != null">
+        #{rain,jdbcType=INTEGER},
+      </if>
+      <if test="airTemp != null">
+        #{airTemp,jdbcType=INTEGER},
+      </if>
+      <if test="airHumi != null">
+        #{airHumi,jdbcType=INTEGER},
+      </if>
+      <if test="soilTemp != null">
+        #{soilTemp,jdbcType=INTEGER},
+      </if>
+      <if test="soilHumi != null">
+        #{soilHumi,jdbcType=INTEGER},
+      </if>
+      <if test="soilElectric != null">
+        #{soilElectric,jdbcType=INTEGER},
+      </if>
+      <if test="soilSalt != null">
+        #{soilSalt,jdbcType=INTEGER},
+      </if>
+      <if test="airPressure != null">
+        #{airPressure,jdbcType=INTEGER},
+      </if>
+      <if test="windSpeed != null">
+        #{windSpeed,jdbcType=INTEGER},
+      </if>
+      <if test="wind != null">
+        #{wind,jdbcType=INTEGER},
+      </if>
+      <if test="longtitude != null">
+        #{longtitude,jdbcType=INTEGER},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        now(),
+      </if>
+      <if test="updateTime != null">
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.megain.junhao.pojo.Device_record_his">
+    update device_record_his
+    <set>
+      <if test="devId != null">
+        dev_id = #{devId,jdbcType=BIGINT},
+      </if>
+      <if test="video != null">
+        video = #{video,jdbcType=INTEGER},
+      </if>
+      <if test="light != null">
+        light = #{light,jdbcType=INTEGER},
+      </if>
+      <if test="rain != null">
+        rain = #{rain,jdbcType=INTEGER},
+      </if>
+      <if test="airTemp != null">
+        air_temp = #{airTemp,jdbcType=INTEGER},
+      </if>
+      <if test="airHumi != null">
+        air_humi = #{airHumi,jdbcType=INTEGER},
+      </if>
+      <if test="soilTemp != null">
+        soil_temp = #{soilTemp,jdbcType=INTEGER},
+      </if>
+      <if test="soilHumi != null">
+        soil_humi = #{soilHumi,jdbcType=INTEGER},
+      </if>
+      <if test="soilElectric != null">
+        soil_electric = #{soilElectric,jdbcType=INTEGER},
+      </if>
+      <if test="soilSalt != null">
+        soil_salt = #{soilSalt,jdbcType=INTEGER},
+      </if>
+      <if test="airPressure != null">
+        air_pressure = #{airPressure,jdbcType=INTEGER},
+      </if>
+      <if test="windSpeed != null">
+        wind_speed = #{windSpeed,jdbcType=INTEGER},
+      </if>
+      <if test="wind != null">
+        wind = #{wind,jdbcType=INTEGER},
+      </if>
+      <if test="longtitude != null">
+        longtitude = #{longtitude,jdbcType=INTEGER},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=INTEGER}
+      </if>
+      <if test="updateTime != null">
+        now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.megain.junhao.pojo.Device_record_his">
+    update device_record_his
+    set dev_id = #{devId,jdbcType=BIGINT},
+      video = #{video,jdbcType=INTEGER},
+      light = #{light,jdbcType=INTEGER},
+      rain = #{rain,jdbcType=INTEGER},
+      air_temp = #{airTemp,jdbcType=INTEGER},
+      air_humi = #{airHumi,jdbcType=INTEGER},
+      soil_temp = #{soilTemp,jdbcType=INTEGER},
+      soil_humi = #{soilHumi,jdbcType=INTEGER},
+      soil_electric = #{soilElectric,jdbcType=INTEGER},
+      soil_salt = #{soilSalt,jdbcType=INTEGER},
+      air_pressure = #{airPressure,jdbcType=INTEGER},
+      wind_speed = #{windSpeed,jdbcType=INTEGER},
+      wind = #{wind,jdbcType=INTEGER},
+      longtitude = #{longtitude,jdbcType=INTEGER},
+      latitude = #{latitude,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

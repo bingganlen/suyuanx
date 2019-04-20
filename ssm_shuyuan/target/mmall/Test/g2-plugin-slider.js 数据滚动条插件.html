@@ -1,0 +1,49 @@
+<html>
+<head>
+    <title>g2-plugin-slider.js 数据滚动条插件</title>
+    <link href="https://cdn.bootcss.com/vis/4.21.0/vis.min.css" rel="stylesheet">
+    <style type="text/css">
+        .m-slider-wrapper {position: fixed;bottom:3px;left:320px;width: 800px;}
+    </style>
+</head>
+<body>
+<div class="m-slider-wrapper">
+    <div id="m-slider"></div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g2-3.5.1/dist/g2.min.js"></script>
+<script src="../js/g2-plugin-slider.js"></script>
+<script type="text/javascript">
+    var data = [{ "date": "2000-06-05", "aqi": 116, "city": "北京" }, { "date": "2000-06-06", "aqi": 129, "city": "北京" }, { "date": "2000-06-07", "aqi": 135, "city": "北京" }, { "date": "2000-06-08", "aqi": 86, "city": "北京" }, { "date": "2000-06-09", "aqi": 73, "city": "北京" }, { "date": "2000-06-10", "aqi": 85, "city": "北京" }, { "date": "2000-06-11", "aqi": 73, "city": "北京" }, { "date": "2000-06-12", "aqi": 68, "city": "北京" }, { "date": "2000-06-13", "aqi": 92, "city": "北京" }, { "date": "2000-06-14", "aqi": 130, "city": "北京" }, { "date": "2000-06-15", "aqi": 245, "city": "北京" }, { "date": "2000-06-16", "aqi": 139, "city": "北京" }, { "date": "2000-06-17", "aqi": 115, "city": "北京" }, { "date": "2000-06-18", "aqi": 111, "city": "北京" }, { "date": "2000-06-19", "aqi": 309, "city": "北京" }, { "date": "2000-06-20", "aqi": 206, "city": "北京" }, { "date": "2000-06-21", "aqi": 137, "city": "北京" }, { "date": "2000-06-22", "aqi": 128, "city": "北京" }, { "date": "2000-06-23", "aqi": 85, "city": "北京" }, { "date": "2000-06-24", "aqi": 94, "city": "北京" }, { "date": "2000-06-25", "aqi": 71, "city": "北京" }, { "date": "2000-06-26", "aqi": 106, "city": "北京" }, { "date": "2000-06-27", "aqi": 84, "city": "北京" }, { "date": "2000-06-28", "aqi": 93, "city": "北京" }, { "date": "2000-06-29", "aqi": 85, "city": "北京" }];
+
+</script>
+<script>
+    $(function () {
+        var myAction = {};
+        var dom = {
+            slider: $("#m-slider")
+        };
+
+        $.extend(myAction, {
+            initSlider: function () {
+                //dom.slider.html('');
+                var slider = new Slider({
+                    container: 'm-slider',
+                    data,
+                    xAxis: 'date',
+                    yAxis: 'aqi',
+                    onChange: function (obj) {
+                        console.log(obj.startText + ':' + obj.endText);
+                    }
+                });
+                slider.render();
+            }
+        })
+
+        var init = function () {
+            myAction.initSlider();
+        }();
+    });
+</script>
+</body>
+</html>
